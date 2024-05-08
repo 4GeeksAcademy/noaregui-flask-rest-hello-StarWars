@@ -37,13 +37,39 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/user', methods=['GET'])
-def handle_hello():
+def cargar_usuarios():
 
+    users = User.query.all()
+    all_users = list(map(lambda x: x.serialize(), users))
+
+    return jsonify(all_users), 200
+
+@app.route('/user', methods=['POST'])
+def crear_usuario():    
+    body = request.get_json()
+    user= User(name=body['name'], email=body['email'], password=body['password'])
+    db.session.add(user)
+    db.session.commit()
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "msg": "holiii cree un usuario  uwu "
     }
-
     return jsonify(response_body), 200
+
+@app.route('/user/<int:user_id>', methods=['PUT'])
+def editar_usuario(user_id):    
+    body = request.get_json()
+
+    if not user:
+     return jsonify({"Usuario no encontrado"}), 404
+    
+    if "name" in body:
+        user = User.query.get(user_id)
+        user = User(name=body['name'], email=body['email'], password=body['password'])
+
+    db.session.commit()    
+    return jsonify({"Usuario actualizado uwu"}), 200
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
