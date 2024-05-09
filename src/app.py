@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planetas
+from models import db, User, Planetas, Personajes, Naves
 #from models import Person
 
 app = Flask(__name__)
@@ -36,7 +36,7 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def cargar_usuarios():
 
     users = User.query.all()
@@ -44,7 +44,7 @@ def cargar_usuarios():
 
     return jsonify(all_users), 200
 
-@app.route('/planets', methods=['GET'])
+@app.route('/planetas', methods=['GET'])
 def cargar_planetas():
 
     planetas = Planetas.query.all()
@@ -52,7 +52,23 @@ def cargar_planetas():
 
     return jsonify(all_planetas), 200
 
-@app.route('/user/<int:usuario_id>', methods=['GET'])
+@app.route('/personajes', methods=['GET'])
+def cargar_personajes():
+
+    personajes = Personajes.query.all()
+    all_personajes = list(map(lambda x: x.serialize(), personajes))
+
+    return jsonify(all_personajes), 200
+
+@app.route('/naves', methods=['GET'])
+def cargar_naves():
+
+    naves = Naves.query.all()
+    all_naves = list(map(lambda x: x.serialize(), naves))
+
+    return jsonify(all_naves), 200
+
+@app.route('/users/<int:usuario_id>', methods=['GET'])
 def cargar_usuario(usuario_id):
 
     user = User.query.get(usuario_id)
@@ -68,6 +84,69 @@ def cargar_usuario(usuario_id):
     }
 
     return jsonify(user_data), 200
+
+@app.route('/planetas/<int:planeta_id>', methods=['GET'])
+def cargar_planeta(planeta_id):
+
+    planeta = Planetas.query.get(planeta_id)
+
+    if planeta is None:
+        raise APIException("Planeta no encontrado", status_code=404)
+    
+    planeta_data = {
+        "id": planeta.id,
+        "name": planeta.name,
+        "diameter": planeta.diameter,
+        "rotation_period": planeta.rotation_period,
+        "population": planeta.population,
+        "climate": planeta.climate,
+        "terrain": planeta.terrain
+    }
+
+    return jsonify(planeta_data), 200
+
+@app.route('/personajes/<int:personaje_id>', methods=['GET'])
+def cargar_personaje(personaje_id):
+
+    personaje = Personajes.query.get(personaje_id)
+
+    if personaje is None:
+        raise APIException("Personaje no encontrado", status_code=404)
+    
+    personaje_data = {
+        "id": personaje.id,
+        "name": personaje.name,
+        "height": personaje.height,
+        "mass": personaje.mass,
+        "hair_color": personaje.hair_color,
+        "skin_color": personaje.skin_color,
+        "eye_color": personaje.eye_color,
+        "birth_year": personaje.birth_year,
+        "gender": personaje.gender
+    }
+
+    return jsonify(personaje_data), 200
+
+@app.route('/naves/<int:nave_id>', methods=['GET'])
+def cargar_nave(nave_id):
+
+    nave = Naves.query.get(nave_id)
+
+    if nave is None:
+        raise APIException("Nave no encontrada", status_code=404)
+    
+    nave_data = {
+        "id": nave.id,
+        "name": nave.name,
+        "model": nave.model,
+        "manufacturer": nave.manufacturer,
+        "cost_in_credits": nave.cost_in_credits,
+        "length": nave.length,
+        "crew": nave.crew,
+        "passengers": nave.passengers
+    }
+
+    return jsonify(nave_data), 200
 
 @app.route('/user', methods=['POST'])
 def crear_usuario():    

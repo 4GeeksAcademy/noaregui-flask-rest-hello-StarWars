@@ -103,20 +103,26 @@ class Personajes(db.Model):
     
 class Naves(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(200))
-    modelo = db.Column(db.String(200))
-    capacidad_tripulacion = db.Column(db.Integer)
-    carga = db.Column(db.Integer)
-    clase = db.Column(db.String(200))
+    name = db.Column(db.String(200))
+    model = db.Column(db.String(200))
+    manufacturer = db.Column(db.String(200))
+    cost_in_credits = db.Column(db.Integer)
+    length = db.Column(db.Float)
+    crew = db.Column(db.Integer)
+    passengers = db.Column(db.Integer)
+    
 
     def __repr__(self):
-        return '<Naves %r>' % self.nombre
+        return '<Naves %r>' % self.name
 
     def serialize(self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
-            "modelo": self.modelo,
-            "capacidad_tripulacion": self.capacidad_tripulacion,
-            "carga": self.carga            
+            "name": self.name,
+            "model": self.model,
+            "manufacturer": self.manufacturer,
+            "cost_in_credits": self.cost_in_credits,
+            "length": self.length,
+            "crew": self.crew,
+            "passengers": self.passengers
         }
