@@ -106,7 +106,7 @@ class Naves(db.Model):
     name = db.Column(db.String(200))
     model = db.Column(db.String(200))
     manufacturer = db.Column(db.String(200))
-    cost_in_credits = db.Column(db.Integer)
+    cost_in_credits = db.Column(db.String(200))
     length = db.Column(db.Float)
     crew = db.Column(db.Integer)
     passengers = db.Column(db.Integer)

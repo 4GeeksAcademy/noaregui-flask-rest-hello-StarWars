@@ -148,7 +148,7 @@ def cargar_nave(nave_id):
 
     return jsonify(nave_data), 200
 
-@app.route('/user', methods=['POST'])
+@app.route('/users', methods=['POST'])
 def crear_usuario():    
     body = request.get_json()
     user= User(name=body['name'], email=body['email'], password=body['password'])
@@ -157,6 +157,41 @@ def crear_usuario():
     response_body = {
         "msg": "Usuario creado "
     }
+    return jsonify(response_body), 200
+
+@app.route('/planetas', methods=['POST'])
+def crear_planeta():    
+    body = request.get_json()
+    planeta = Planetas(name=body['name'], diameter=body['diameter'], rotation_period=body['rotation_period'], population=body['population'], climate=body['climate'], terrain=body['terrain'])
+    db.session.add(planeta)
+    db.session.commit()
+    response_body = {
+        "msg": "Planeta creado "
+    }
+    return jsonify(response_body), 200
+
+@app.route('/personajes', methods=['POST'])
+def crear_personaje():    
+    body = request.get_json()
+    personaje = Personajes(name=body['name'], height=body['height'], mass=body['mass'], hair_color=body['hair_color'], skin_color=body['skin_color'], eye_color=body['eye_color'], birth_year=body['birth_year'], gender=body['gender'] )
+    db.session.add(personaje)
+    db.session.commit()
+    response_body = {
+        "msg": "Personaje creado "
+    }
+
+    return jsonify(response_body), 200
+
+@app.route('/naves', methods=['POST'])
+def crear_nave():    
+    body = request.get_json()
+    nave = Naves(name=body['name'], model=body['model'], manufacturer=body['manufacturer'], cost_in_credits=body['cost_in_credits'], length=body['length'], crew=body['crew'], passengers=body['passengers'] )
+    db.session.add(nave)
+    db.session.commit()
+    response_body = {
+        "msg": "Nave creada"
+    }
+
     return jsonify(response_body), 200
 
 @app.route('/user/<int:usuario_id>', methods=['PUT'])
