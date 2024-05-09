@@ -8,7 +8,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -29,14 +29,17 @@ class Favoritos(db.Model):
     __tablename__ = 'favoritos'
     id = db.Column(db.Integer, primary_key=True)
 
+    user_id = db.Column(db.Integer, db.ForeignKey("Users.id"), nullable=False)
+    user = db.relationship("User", backref='favoritos', lazy=True)
+
     planeta_id = db.Column(db.Integer, db.ForeignKey("planetas.id"))
-    planeta = db.relationship("Planetas", backref='users', lazy=True)
+    planeta = db.relationship("Planetas", backref='favoritos', lazy=True)
 
     personaje_id = db.Column(db.Integer, db.ForeignKey("personajes.id"))
-    personaje = db.relationship("Personajes", backref='users', lazy=True)
+    personaje = db.relationship("Personajes", backref='favoritos', lazy=True)
 
     nave_id = db.Column(db.Integer, db.ForeignKey("naves.id"))
-    nave = db.relationship("Naves", backref='users', lazy=True)
+    nave = db.relationship("Naves", backref='favoritos', lazy=True)
 
     def __repr__(self):
         return '<Favoritos %r>' % self.id
@@ -44,6 +47,7 @@ class Favoritos(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "planeta": self.planeta.serialize() if self.planeta else None,
             "personaje": self.personaje.serialize() if self.personaje else None,
             "nave": self.nave.serialize() if self.nave else None
