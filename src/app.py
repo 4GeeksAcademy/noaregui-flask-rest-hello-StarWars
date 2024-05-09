@@ -194,19 +194,15 @@ def crear_nave():
 
     return jsonify(response_body), 200
 
-@app.route('/user/<int:usuario_id>', methods=['PUT'])
+@app.route('/users/<int:usuario_id>', methods=['PUT'])
 def editar_usuario(usuario_id):
-    # Obtener el cuerpo de la solicitud en formato JSON
     body = request.get_json()
 
-    # Obtener el usuario por ID
     user = User.query.get(usuario_id)
 
-    # Verificar si el usuario existe
     if user is None:
         raise APIException("Usuario no encontrado", status_code=404)
     
-    # Actualizar los campos del usuario si se proporcionan en el cuerpo de la solicitud
     if body is not None:
         if "name" in body:
             user.name = body["name"]
@@ -216,18 +212,145 @@ def editar_usuario(usuario_id):
         # Commit para guardar los cambios en la base de datos
         db.session.commit()
 
-        # Crear una respuesta exitosa
         response_body = {
             "msg": "Usuario editado exitosamente",
             "id": user.id,
             "name": user.name,
             "email": user.email
-            # Puedes agregar más campos aquí si lo deseas
         }
         return jsonify(response_body), 200
     else:
-        # Si no se proporcionaron datos en el cuerpo de la solicitud
         raise APIException("No se proporcionaron datos para editar el usuario", status_code=400)
+    
+@app.route('/planetas/<int:planeta_id>', methods=['PUT'])
+def editar_planeta(planeta_id):
+    body = request.get_json()
+
+    planeta = Planetas.query.get(planeta_id)
+
+    if planeta is None:
+        raise APIException("Planeta no encontrado", status_code=404)
+    
+    if body is not None:
+        if "name" in body:
+            planeta.name = body["name"]
+        if "diameter" in body:
+            planeta.diameter = body["diameter"]
+        if "rotation_period" in body:
+            planeta.rotation_period = body["rotation_period"]
+        if "population" in body:
+            planeta.population = body["population"]
+        if "climate" in body:
+            planeta.climate = body["climate"]
+        if "terrain" in body:
+            planeta.terrain = body["terrain"]
+        
+        # Commit para guardar los cambios en la base de datos
+        db.session.commit()
+
+        response_body = {
+            "msg": "Planeta editado exitosamente",
+            "id": planeta.id,
+            "name": planeta.name,
+            "diameter": planeta.diameter,
+            "rotation_period": planeta.rotation_period,
+            "population": planeta.population,
+            "climate": planeta.climate,
+            "terrain": planeta.terrain
+        }
+        return jsonify(response_body), 200
+    else:
+        raise APIException("No se proporcionaron datos para editar el planeta", status_code=400)
+    
+@app.route('/personajes/<int:personaje_id>', methods=['PUT'])
+def editar_personaje(personaje_id):
+    body = request.get_json()
+
+    personaje = Personajes.query.get(personaje_id)
+
+    if personaje is None:
+        raise APIException("Personaje no encontrado", status_code=404)
+    
+    if body is not None:
+        if "name" in body:
+            personaje.name = body["name"]
+        if "height" in body:
+            personaje.height = body["height"]
+        if "mass" in body:
+            personaje.mass = body["mass"]
+        if "hair_color" in body:
+            personaje.hair_color = body["hair_color"]
+        if "skin_color" in body:
+            personaje.skin_color = body["skin_color"]
+        if "eye_color" in body:
+            personaje.eye_color = body["eye_color"]
+        if "birth_year" in body:
+            personaje.birth_year = body["birth_year"]
+        if "gender" in body:
+            personaje.gender = body["gender"]
+
+        # Commit para guardar los cambios en la base de datos
+        db.session.commit()
+
+        response_body = {
+            "msg": "Personaje editado exitosamente",
+            "id": personaje.id,
+            "name": personaje.name,
+            "height": personaje.height,
+            "mass": personaje.mass,
+            "hair_color": personaje.hair_color,
+            "skin_color": personaje.skin_color,
+            "eye_color": personaje.eye_color,
+            "birth_year": personaje.birth_year,
+            "gender": personaje.gender
+        }
+        return jsonify(response_body), 200
+    else:
+        raise APIException("No se proporcionaron datos para editar el personaje", status_code=400)
+    
+@app.route('/naves/<int:nave_id>', methods=['PUT'])
+def editar_nave(nave_id):
+    body = request.get_json()
+
+    nave = Naves.query.get(nave_id)
+
+    if nave is None:
+        raise APIException("Nave no encontrada", status_code=404)
+    
+    if body is not None:
+        if "name" in body:
+            nave.name = body["name"]
+        if "model" in body:
+            nave.model = body["model"]
+        if "manufacturer" in body:
+            nave.manufacturer = body["manufacturer"]
+        if "cost_in_credits" in body:
+            nave.cost_in_credits = body["cost_in_credits"]
+        if "length" in body:
+            nave.length = body["length"]
+        if "crew" in body:
+            nave.crew = body["crew"]
+        if "passengers" in body:
+            nave.passengers = body["passengers"]
+
+
+        # Commit para guardar los cambios en la base de datos
+        db.session.commit()
+
+        response_body = {
+            "msg": "Nave editada exitosamente",
+            "id": nave.id,
+            "name": nave.name,
+            "model": nave.model,
+            "manufacturer": nave.manufacturer,
+            "cost_in_credits": nave.cost_in_credits,
+            "length": nave.length,
+            "crew": nave.crew,
+            "passengers": nave.passengers
+        }
+        return jsonify(response_body), 200
+    else:
+        raise APIException("No se proporcionaron datos para editar la nave", status_code=400)
 
 
 # this only runs if `$ python src/app.py` is executed
