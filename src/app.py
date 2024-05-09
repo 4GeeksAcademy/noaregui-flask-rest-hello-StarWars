@@ -351,6 +351,62 @@ def editar_nave(nave_id):
         return jsonify(response_body), 200
     else:
         raise APIException("No se proporcionaron datos para editar la nave", status_code=400)
+    
+@app.route('/users/<int:usuario_id>', methods=['DELETE'])
+def eliminar_usuario(usuario_id):
+    body = request.get_json()
+
+    user = User.query.get(usuario_id)
+
+    if user is None:
+        raise APIException("Usuario no encontrado", status_code=404)
+    
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify("Usuario eliminado"), 200
+
+@app.route('/planetas/<int:planeta_id>', methods=['DELETE'])
+def eliminar_planeta(planeta_id):
+    body = request.get_json()
+
+    planeta = Planetas.query.get(planeta_id)
+
+    if planeta is None:
+        raise APIException("Planeta no encontrado", status_code=404)
+    
+    db.session.delete(planeta)
+    db.session.commit()
+
+    return jsonify("Planeta eliminado"), 200
+
+@app.route('/personajes/<int:personaje_id>', methods=['DELETE'])
+def eliminar_personaje(personaje_id):
+    body = request.get_json()
+
+    personaje = Personajes.query.get(personaje_id)
+
+    if personaje is None:
+        raise APIException("Personaje no encontrado", status_code=404)
+    
+    db.session.delete(personaje)
+    db.session.commit()
+
+    return jsonify("Personaje eliminado"), 200
+
+@app.route('/naves/<int:nave_id>', methods=['DELETE'])
+def eliminar_nave(nave_id):
+    body = request.get_json()
+
+    nave = Naves.query.get(nave_id)
+
+    if nave is None:
+        raise APIException("Nave no encontrada", status_code=404)
+    
+    db.session.delete(nave)
+    db.session.commit()
+
+    return jsonify("Nave eliminada"), 200
 
 
 # this only runs if `$ python src/app.py` is executed
