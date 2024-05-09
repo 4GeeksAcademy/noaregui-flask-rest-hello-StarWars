@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Planetas
 #from models import Person
 
 app = Flask(__name__)
@@ -44,6 +44,31 @@ def cargar_usuarios():
 
     return jsonify(all_users), 200
 
+@app.route('/planets', methods=['GET'])
+def cargar_planetas():
+
+    planetas = Planetas.query.all()
+    all_planetas = list(map(lambda x: x.serialize(), planetas))
+
+    return jsonify(all_planetas), 200
+
+@app.route('/user/<int:usuario_id>', methods=['GET'])
+def cargar_usuario(usuario_id):
+
+    user = User.query.get(usuario_id)
+
+    if user is None:
+        raise APIException("Usuario no encontrado", status_code=404)
+    
+    user_data = {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "password": user.password
+    }
+
+    return jsonify(user_data), 200
+
 @app.route('/user', methods=['POST'])
 def crear_usuario():    
     body = request.get_json()
@@ -51,24 +76,44 @@ def crear_usuario():
     db.session.add(user)
     db.session.commit()
     response_body = {
-        "msg": "holiii cree un usuario  uwu "
+        "msg": "Usuario creado "
     }
     return jsonify(response_body), 200
 
-@app.route('/user/<int:user_id>', methods=['PUT'])
-def editar_usuario(user_id):    
+@app.route('/user/<int:usuario_id>', methods=['PUT'])
+def editar_usuario(usuario_id):
+    # Obtener el cuerpo de la solicitud en formato JSON
     body = request.get_json()
 
-    if not user:
-     return jsonify({"Usuario no encontrado"}), 404
+    # Obtener el usuario por ID
+    user = User.query.get(usuario_id)
+
+    # Verificar si el usuario existe
+    if user is None:
+        raise APIException("Usuario no encontrado", status_code=404)
     
-    if "name" in body:
-        user = User.query.get(user_id)
-        user = User(name=body['name'], email=body['email'], password=body['password'])
+    # Actualizar los campos del usuario si se proporcionan en el cuerpo de la solicitud
+    if body is not None:
+        if "name" in body:
+            user.name = body["name"]
+        if "email" in body:
+            user.email = body["email"]
+        
+        # Commit para guardar los cambios en la base de datos
+        db.session.commit()
 
-    db.session.commit()    
-    return jsonify({"Usuario actualizado uwu"}), 200
-
+        # Crear una respuesta exitosa
+        response_body = {
+            "msg": "Usuario editado exitosamente",
+            "id": user.id,
+            "name": user.name,
+            "email": user.email
+            # Puedes agregar más campos aquí si lo deseas
+        }
+        return jsonify(response_body), 200
+    else:
+        # Si no se proporcionaron datos en el cuerpo de la solicitud
+        raise APIException("No se proporcionaron datos para editar el usuario", status_code=400)
 
 
 # this only runs if `$ python src/app.py` is executed

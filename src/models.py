@@ -36,14 +36,28 @@ class Favoritos(db.Model):
     personaje = db.relationship("Personajes", backref='users', lazy=True)
 
     nave_id = db.Column(db.Integer, db.ForeignKey("naves.id"))
-    nave = db.relationship("Naves", backref='users', lazy=True)    
+    nave = db.relationship("Naves", backref='users', lazy=True)
+
+    def __repr__(self):
+        return '<Favoritos %r>' % self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "planeta": self.planeta.serialize() if self.planeta else None,
+            "personaje": self.personaje.serialize() if self.personaje else None,
+            "nave": self.nave.serialize() if self.nave else None
+        }    
 
 class Planetas(db.Model):
     __tablename__ = 'planetas'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
-    diametro = db.Column(db.Integer)
-    clima = db.Column(db.String(200))
+    diameter = db.Column(db.Integer)
+    rotation_period = db.Column(db.Integer)
+    population = db.Column(db.String(200))
+    climate = db.Column(db.String(200))
+    terrain = db.Column(db.String(200))
 
     def __repr__(self):
         return '<Planetas %r>' % self.name
@@ -52,17 +66,24 @@ class Planetas(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "diametro": self.diametro,
-            "clima": self.clima
+            "diameter": self.diameter,
+            "rotation_period": self.rotation_period,
+            "population": self.population,
+            "climate": self.climate,
+            "terrain": self.terrain
         }
 
 class Personajes(db.Model):
     __tablename__ = 'personajes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
-    altura = db.Column(db.Integer)
-    peso = db.Column(db.Integer)    
-    color_piel = db.Column(db.String(200))
+    height = db.Column(db.Integer)
+    mass = db.Column(db.Integer)
+    hair_color = db.Column(db.String(200))    
+    skin_color = db.Column(db.String(200))
+    eye_color = db.Column(db.String(200))
+    birth_year = db.Column(db.String(200))
+    gender = db.Column(db.String(200))
 
     def __repr__(self):
         return '<Personajes %r>' % self.name
@@ -71,9 +92,13 @@ class Personajes(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "altura": self.altura,
-            "peso": self.peso,
-            "color_piel": self.color_piel
+            "height": self.height,
+            "mass": self.mass,
+            "hair_color": self.hair_color,
+            "skin_color": self.skin_color,
+            "eye_color": self.eye_color,
+            "birth_year": self.birth_year,
+            "gender": self.gender
         }
     
 class Naves(db.Model):
