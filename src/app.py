@@ -192,10 +192,8 @@ def crear_planeta():
     }
     return jsonify(response_body), 200
 
-@app.route('/favorito/planeta/<int:planeta_id>/<int:user_id>', methods=['POST'])
-def añadir_favorito_planeta(planeta_id, user_id):
-    # Obtener el usuario actual (simulado, asegúrate de obtener el usuario real)
-
+@app.route('/user/<int:user_id>/favorito/planeta/<int:planeta_id>', methods=['POST'])
+def añadir_favorito_planeta(planeta_id, user_id):    
     # Validar la existencia del planeta en la base de datos
     planeta = Planetas.query.get(planeta_id)
     if not planeta:
@@ -214,6 +212,7 @@ def añadir_favorito_planeta(planeta_id, user_id):
         "msg": f"Planeta '{planeta.name}' añadido a favoritos"
     }
     return jsonify(response_body), 200
+
 
 @app.route('/personajes', methods=['POST'])
 def crear_personaje():    
